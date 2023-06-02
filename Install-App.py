@@ -14,13 +14,27 @@ from pathlib import Path
 import Modulo_Util as Util
 
 
-path = Util.Ignore_Comment(
+# Indicar el sistema operativo
+system = Util.System()
+
+# Leer datos del texto de instalación
+text_installer = Util.Ignore_Comment(
         text=Util.Text_Read(
             file_and_path='./Install-App.dat',
-            opc='ModeTextOnly'
+            opc='ModeText'
         ),
         comment='#'
     )
+
+# Separarar datos del texto de instalacion, sobre caracteres '='
+text_dict = Util.Text_Separe(
+        text=text_installer,
+        text_separe='='
+    )
+    
+# Agregar Informacion del texto de instalacion, en las variables
+path = Util.View_echo(text=text_dict['path'])
+app_exec = text_dict['exec']
 if path == '':
     go = False
 else:
@@ -93,6 +107,9 @@ class Window_Install(QWidget):
         
     def evt_copy_files(self):
         try:
+            # Crear Carpeta, si es que no existe
+            Util.Create_Dir( self.entry_dir.text() )
+
             # Lista de archivos
             file_list = Util.Files_List(
                 files = '*',

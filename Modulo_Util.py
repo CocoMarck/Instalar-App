@@ -315,6 +315,8 @@ def Files_Copy(src='', dst=''):
 
     # Detectar si es una carpeta
     if os.path.isdir(src):
+        dst = f'{Path(dst)}{src}'
+        Create_Dir(file_dir=dst)
         copy_tree(src, dst)
     # Detectar si es un archivo
     elif os.path.isfile(src):
@@ -323,3 +325,74 @@ def Files_Copy(src='', dst=''):
         state = 'ERROR - source no exists'
         
     return state
+
+    
+def Text_Separe(text='', text_separe='='):
+    '''Para separar el texto en 2 y almacenarlo en un diccionario'''
+
+    text_dict = {}
+    if (
+        '\n' in text and
+        text_separe in text
+    ):
+        # Cuando hay saltos de linea y separador
+        for line in text.split('\n'):
+            line = Text_Separe(text=line, text_separe=text_separe)
+            for key in line.keys():
+                text_dict.update( {key : line[key]} )
+
+    elif text_separe in text:
+        # Cuando solo hay separador
+        text = text.split(text_separe)
+        text_dict.update( {text[0] : text[1]} )
+    else:
+        pass
+    
+    return text_dict
+    
+    
+def View_echo(text=None):
+    if (
+        sys == 'linux' or
+        sys == 'win'
+    ):
+        text = subprocess.check_output(
+                f'echo {text}',
+                shell=True,
+                text=True
+            ).replace('\n', '')
+    else:
+        pass
+
+    return text
+    
+
+def Create_Dir(file_dir=''):
+    if pathlib.Path(file_dir).exists():
+        # Carpeta ya existente, por lo tanto no se creara
+        pass
+        
+    else:
+        # Intentar Crear carpeta, porque no existe.
+        try:
+            # Separador de slash
+            if sys == 'linux':
+                slash = '/'
+            elif sys == 'win':
+                slash = '\\'
+            else:
+                pass
+                
+            # Separar Carpetas basado en los slash
+            dir_ready = ''
+            for text_dir in file_dir.split(slash):
+                dir_ready = f'{dir_ready}{slash}{text_dir}'
+
+                if pathlib.Path(dir_ready).exists():
+                    # Si existe la carpeta
+                    pass
+                else:
+                    # Si no existe la carpeta
+                    os.mkdir(dir_ready)
+        except:
+            pass
