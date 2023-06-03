@@ -14,8 +14,6 @@ from pathlib import Path
 import Modulo_Util as Util
 
 
-# Indicar el sistema operativo
-system = Util.System()
 
 # Leer datos del texto de instalación
 text_installer = Util.Ignore_Comment(
@@ -35,6 +33,15 @@ text_dict = Util.Text_Separe(
 # Agregar Informacion del texto de instalacion, en las variables
 path = Util.View_echo(text=text_dict['path'])
 app_exec = text_dict['exec']
+app_name = text_dict['name']
+terminal = text_dict['terminal']
+if (terminal == 'True' or
+    terminal == 'False'
+):
+    terminal = bool(terminal)
+else:
+    terminal = False
+
 if path == '':
     go = False
 else:
@@ -72,8 +79,12 @@ class Window_Install(QWidget):
         hbox = QHBoxLayout()
         vbox_main.addLayout(hbox)
         
-        self.entry_dir = QLineEdit()
-        self.entry_dir.setPlaceholderText('Establece el Directorio')
+        self.entry_dir = QLineEdit(
+            self,
+            maxLength=90,
+            placeholderText='Establece el Directorio',
+            clearButtonEnabled=True
+        )
         self.entry_dir.setText(text_dir)
         hbox.addWidget(self.entry_dir)
         
@@ -131,7 +142,16 @@ class Window_Install(QWidget):
                     file_ready, # Archivo
                     self.entry_dir.text() # Ruta
                 )
+                
+            # Crear acceso directo
+            Util.App_DirectAccess(
+                name=app_name,
+                app_exec=app_exec,
+                path=self.entry_dir.text(),
+                terminal=terminal
+            )
             
+            # Mensaje indicador de finalizacion
             QMessageBox.information(
                 self,
                 'Install Complete',

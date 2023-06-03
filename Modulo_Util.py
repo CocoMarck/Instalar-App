@@ -396,3 +396,121 @@ def Create_Dir(file_dir=''):
                     os.mkdir(dir_ready)
         except:
             pass
+            
+
+def App_DirectAccess(
+        name='',
+        app_exec='',
+        path='',
+        categories=[''],
+        comment='',
+        icon='',
+        terminal=False,
+        path_DirectAccess=''
+    ):
+    '''
+    Para crear un acceso directo.
+    
+    Recuerda que el parametro app_exec, se refiere a la aplicación que quieras ejecutar, por medio del acceso directo.
+
+    Pide como parametros:
+    name=str,
+    app_exec=str,
+    path=str,
+    categories=list[str],
+    comment=str,
+    icon=str,
+    terminal=bool,
+    path_DirectAccess=str
+    '''
+    # Si existe el path y entonces se seguira
+    if pathlib.Path(path).exists():
+        # Si existe la aplicación, entonces se sigue
+        go = True
+        
+        # Verificar la existencia del nombre
+        if name == '':
+            go = False
+        else:
+            pass
+        
+        # Verificar que el icono exista
+        if pathlib.Path(icon).exists():
+            pass
+        else:
+            icon = ''
+            
+        # Verificar que las categorias sean una lista
+        if type(categories) is list == True:
+            pass
+        else:
+            categories = ['']
+            
+        # Verificar que el parametro terminal sea un boleano
+        if type(terminal) is bool:
+            # Solo en linux
+            if terminal == True:
+                terminal = 'true'
+            else:
+                terminal = 'false'
+        else:
+            terminal = False
+
+    else:
+        # Si no existe el path y el app no se seguira
+        go = False
+
+    
+    # Si se cumplen los requisitos, para crear el acceso directo
+    if go == True:
+        # Poner la lista de categorias en una variable tipo str
+        categories_ready = ''
+        for categorie in categories:
+            categorie = str(categorie)
+            categories_ready += categorie
+            if categorie == '':
+                pass
+            else:
+                categories_ready += ';'
+        categories_ready = categories_ready.replace('\n','')
+
+        # Texto necesario para el acceso directo
+        text_DirectAccess = (
+            '[Desktop Entry]\n'
+            'Type=Application\n'
+            f'Name={name}\n'
+            f'Comment={comment}\n'
+            f'Icon={icon}\n'
+            f'Exec={app_exec}\n'
+            f'Path={path}\n'
+            f'Terminal={terminal}\n'
+            f'Categories={categories_ready}'
+        )
+        
+        # Verificar o establecer el path necesario para el acceso directo
+        if path_DirectAccess == '':
+            path_DirectAccess = View_echo(
+                text='$HOME/.local/share/applications/'
+            )
+        else:
+            pass
+        if pathlib.Path(path_DirectAccess).exists():
+            pass
+        else:
+            Create_Dir( path_DirectAccess )
+            
+        
+        # Establecer el acceso directo, con el path y el name indicados
+        # Tambien darle permisos de ejecución
+        with open(
+            path_DirectAccess + name + '.desktop',
+            'w'
+        ) as DirectAccess_ready:
+            DirectAccess_ready.write(text_DirectAccess)
+
+        os.system(f'chmod +x {path_DirectAccess}')
+        
+    # Si no se cumple los requisitos, entonces no se hace nada
+    else:
+        pass
+        

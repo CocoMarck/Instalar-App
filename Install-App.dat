@@ -1,2 +1,4 @@
 path=$HOME/Proyectiles/Felizidad
-exec=Application
+name=Prueba
+exec=python3
+terminal=True
