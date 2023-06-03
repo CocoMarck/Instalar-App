@@ -430,7 +430,7 @@ def App_DirectAccess(
         
         # Verificar la existencia del nombre
         if name == '':
-            go = False
+            name = 'NoName'
         else:
             pass
         
