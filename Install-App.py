@@ -52,7 +52,7 @@ class Window_Install(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        self.setWindowTitle('Install - App')
+        self.setWindowTitle(f'Install - {app_name}')
         self.setGeometry(100, 100, 512, 256)
         
         # Contenedor Principal
@@ -71,6 +71,13 @@ class Window_Install(QWidget):
         label = QLabel()
         label.setText(text_help)
         vbox_main.addWidget(label)
+        
+        # Seccion Vertical - Información de instalación
+        label_info_exec = QLabel(f'Ejecuar: {app_exec}')
+        vbox_main.addWidget(label_info_exec)
+        
+        label_info_terminal = QLabel(f'Terminal: {terminal}')
+        vbox_main.addWidget(label_info_terminal)
         
         # Seccion Vertical - Separador
         vbox_main.addStretch()

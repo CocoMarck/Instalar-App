@@ -412,6 +412,8 @@ def App_DirectAccess(
     Para crear un acceso directo.
     
     Recuerda que el parametro app_exec, se refiere a la aplicación que quieras ejecutar, por medio del acceso directo.
+    
+    Y path_DirectAccess, se refiere a la ruta de cración del acceso directo. Podriamos decir que es un parametro opcional, ya que la mayoria de veces, es mejor dejarlo sin llenar.
 
     Pide como parametros:
     name=str,
