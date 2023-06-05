@@ -450,11 +450,14 @@ def App_DirectAccess(
             
         # Verificar que el parametro terminal sea un boleano
         if type(terminal) is bool:
-            # Solo en linux
-            if terminal == True:
-                terminal = 'true'
+            if sys == 'linux':
+                # Solo en linux
+                if terminal == True:
+                    terminal = 'true'
+                else:
+                    terminal = 'false'
             else:
-                terminal = 'false'
+                pass
         else:
             terminal = False
 
@@ -475,42 +478,106 @@ def App_DirectAccess(
             else:
                 categories_ready += ';'
         categories_ready = categories_ready.replace('\n','')
-
-        # Texto necesario para el acceso directo
-        text_DirectAccess = (
-            '[Desktop Entry]\n'
-            'Type=Application\n'
-            f'Name={name}\n'
-            f'Comment={comment}\n'
-            f'Icon={icon}\n'
-            f'Exec={app_exec}\n'
-            f'Path={path}\n'
-            f'Terminal={terminal}\n'
-            f'Categories={categories_ready}'
-        )
         
         # Verificar o establecer el path necesario para el acceso directo
         if path_DirectAccess == '':
-            path_DirectAccess = View_echo(
-                text='$HOME/.local/share/applications/'
-            )
+            if sys == 'linux':
+                path_DirectAccess = View_echo(
+                    text='$HOME/.local/share/applications/'
+                )
+            elif sys == 'win':
+                path_DirectAccess = View_echo(
+                    '%USERPROFILE%'
+                    '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\'
+                )
+            else:
+                pass
         else:
             pass
         if pathlib.Path(path_DirectAccess).exists():
             pass
         else:
             Create_Dir( path_DirectAccess )
+
+        # Texto necesario para el acceso directo
+        if sys == 'linux':
+            type_DirectAccess = '.desktop'
+        
+            text_DirectAccess = (
+                '[Desktop Entry]\n'
+                'Type=Application\n'
+                f'Name={name}\n'
+                f'Comment={comment}\n'
+                f'Icon={icon}\n'
+                f'Exec={app_exec}\n'
+                f'Path={path}\n'
+                f'Terminal={terminal}\n'
+                f'Categories={categories_ready}'
+            )
+        elif sys == 'win':
+            type_DirectAccess = '.vbs'
+
+            if terminal == True:
+                with open(f'{Path(path)}{name}.bat', 'w') as text_exec:
+                    text_exec.write(
+                        '@echo off\n'
+                        f'{app_exec}\n'
+                        'pause'
+                    )
+                app_exec = f'{name}.bat'
+
+            else:
+                pass
+        
+            text_DirectAccess = (
+                # Objeto para acceder a la shell
+                'Set objShell = WScript.CreateObject("WScript.SHell")\n\n'
+
+                # Objeto DirectAccess - Crear acceso directo
+                'Set objDirectAccess = objShell.CreateShortcut'
+                f'("{path_DirectAccess}{name}.Lnk")\n'
+                
+                # Objeto DirectAccess - Aplicacion a ejecutar
+                '    objDirectAccess.TargetPath = '
+                f'"{Path(path)}{app_exec}"\n'
+                
+                # DirectAccess - Parametro de carpeta de trabajo
+                f'    objDirectAccess.WorkingDirectory = "{path}"\n'
+                
+                # DierctAccess - Parametro de comentario
+                f'    objDirectAccess.Description = "{comment}"\n'
+                
+                # DirectAccess - Parametro de icono
+                '    objDirectAccess.IconLocation = '
+                f'"{Path(path)}{icon}"\n\n'
+                
+                # Fin, para guardar el acceso directo
+                'objDirectAccess.Save'
+            )
+        else: pass
             
         
         # Establecer el acceso directo, con el path y el name indicados
         # Tambien darle permisos de ejecución
-        with open(
-            path_DirectAccess + name + '.desktop',
-            'w'
-        ) as DirectAccess_ready:
-            DirectAccess_ready.write(text_DirectAccess)
+        DirectAccess = name + type_DirectAccess
+        
+        if sys == 'linux':
+            with open(
+                path_DirectAccess + DirectAccess,
+                'w'
+            ) as DirectAccess_ready:
+                DirectAccess_ready.write(text_DirectAccess)
 
-        os.system(f'chmod +x {path_DirectAccess}')
+            os.system(f'chmod +x {DirectAccess}')
+
+        elif sys == 'win':
+            with open(DirectAccess, 'w') as DirectAccess_ready:
+                DirectAccess_ready.write(text_DirectAccess)
+        
+            os.system(f'"{DirectAccess}"')
+            #os.remove(DirectAccess)
+        else:
+            pass
         
     # Si no se cumple los requisitos, entonces no se hace nada
     else:
