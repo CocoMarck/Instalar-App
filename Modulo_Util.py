@@ -443,7 +443,7 @@ def App_DirectAccess(
             icon = ''
             
         # Verificar que las categorias sean una lista
-        if type(categories) is list == True:
+        if type(categories) is list:
             pass
         else:
             categories = ['']

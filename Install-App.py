@@ -10,8 +10,11 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout
 )
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon
 from pathlib import Path
 import Modulo_Util as Util
+import Modulo_Util_Qt as Util_Qt
 
 
 
@@ -32,20 +35,38 @@ text_dict = Util.Text_Separe(
     
 # Agregar Informacion del texto de instalacion, en las variables
 path = Util.View_echo(text=text_dict['path'])
-app_exec = text_dict['exec']
-app_name = text_dict['name']
-terminal = text_dict['terminal']
-if (terminal == 'True' or
-    terminal == 'False'
-):
-    terminal = bool(terminal)
-else:
-    terminal = False
-
 if path == '':
     go = False
 else:
     go = True
+
+# Aplicacion a ejecutar
+app_exec = text_dict['exec']
+
+# Nombre de aplicación
+app_name = text_dict['name']
+
+# Icono de aplicacion
+app_icon = text_dict['icon']
+
+# Comentario
+comment = text_dict['comment']
+
+# Abir o no en Terminal
+terminal = text_dict['terminal']
+if terminal == 'True':
+    terminal = True
+elif terminal == 'False':
+    terminal = False
+else:
+    terminal = False
+
+# Categorias
+categories = text_dict['categories']
+categories_list = []
+for categorie in categories.split(','):
+    categories_list.append(categorie)
+categories = categories_list
 
 
 class Window_Install(QWidget):
@@ -53,11 +74,17 @@ class Window_Install(QWidget):
         super().__init__(*args, **kwargs)
         
         self.setWindowTitle(f'Install - {app_name}')
+        #self.setWindowIcon(QIcon('/Ruta/Icono.png'))
         self.setGeometry(100, 100, 512, 256)
         
         # Contenedor Principal
         vbox_main = QVBoxLayout()
         self.setLayout(vbox_main)
+        
+        # Seccion Vertical - Boton de Información de instalación
+        button_info = QPushButton('Mostrar Información de instalación')
+        button_info.clicked.connect(self.evt_info_install)
+        vbox_main.addWidget(button_info)
         
         # Texto necesario
         if go == True:
@@ -71,13 +98,6 @@ class Window_Install(QWidget):
         label = QLabel()
         label.setText(text_help)
         vbox_main.addWidget(label)
-        
-        # Seccion Vertical - Información de instalación
-        label_info_exec = QLabel(f'Ejecuar: {app_exec}')
-        vbox_main.addWidget(label_info_exec)
-        
-        label_info_terminal = QLabel(f'Terminal: {terminal}')
-        vbox_main.addWidget(label_info_terminal)
         
         # Seccion Vertical - Separador
         vbox_main.addStretch()
@@ -93,6 +113,7 @@ class Window_Install(QWidget):
             clearButtonEnabled=True
         )
         self.entry_dir.setText(text_dir)
+
         hbox.addWidget(self.entry_dir)
         
         hbox.addStretch()
@@ -112,6 +133,26 @@ class Window_Install(QWidget):
         # Mostrar Ventana
         self.show()
         
+    def evt_info_install(self):
+        Util_Qt.Dialog_TextEdit(
+            self,
+            text = (
+                f'<b>Ruta de instalacion por defecto:</b> {path}\n\n'
+            
+                f'<b>Nombre de aplicación:</b> {app_name}\n\n'
+
+                f'<b>Aplicación a ejecutar:</b> {app_exec}\n\n'
+                
+                f'<b>Icono:</b> {app_icon}\n\n'
+                
+                f'<b>Comentario de aplicación:</b> {comment}\n\n'
+
+                f'<b>Ejecutar por terminal:</b> {terminal}\n\n'
+
+                f'<b>Lista de categorias:</b> {categories}'
+            )
+        ).exec()
+        
     def evt_set_dir(self):
         dir_name = QFileDialog.getExistingDirectory(
             self,
@@ -124,6 +165,8 @@ class Window_Install(QWidget):
             pass
         
     def evt_copy_files(self):
+        dialog_wait = Util_Qt.Dialog_Wait(self, text='Por favor espera...')
+        dialog_wait.show()
         try:
             # Crear Carpeta, si es que no existe
             Util.Create_Dir( self.entry_dir.text() )
@@ -152,12 +195,16 @@ class Window_Install(QWidget):
                 
             # Crear acceso directo
             Util.App_DirectAccess(
+                path=self.entry_dir.text(),
                 name=app_name,
                 app_exec=app_exec,
-                path=self.entry_dir.text(),
-                terminal=terminal
+                icon=app_icon,
+                comment=comment,
+                terminal=terminal,
+                categories=categories
             )
             
+            dialog_wait.close()
             # Mensaje indicador de finalizacion
             QMessageBox.information(
                 self,
@@ -166,6 +213,7 @@ class Window_Install(QWidget):
                 'Listo, aplicación instalada'
             )
         except:
+            dialog_wait.close()
             QMessageBox.critical(
                 self,
                 'Error - Dir',
