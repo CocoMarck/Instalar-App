@@ -167,10 +167,11 @@ class Window_Install(QWidget):
     def evt_copy_files(self):
         dialog_wait = Util_Qt.Dialog_Wait(self, text='Por favor espera...')
         dialog_wait.show()
-        try:
-            # Crear Carpeta, si es que no existe
-            Util.Create_Dir( self.entry_dir.text() )
-
+        
+        # Crear Carpeta, si es que no existe
+        Util.Create_Dir( self.entry_dir.text() )
+        # Si existe la carpeta entonces
+        if Path( self.entry_dir.text() ).exists():
             # Lista de archivos
             file_list = Util.Files_List(
                 files = '*',
@@ -212,14 +213,15 @@ class Window_Install(QWidget):
                 
                 'Listo, aplicación instalada'
             )
-        except:
+        else:
             dialog_wait.close()
             QMessageBox.critical(
                 self,
                 'Error - Dir',
                 
-                'ERROR, directorio inexistente\n'
-                'Establece un Directorio correcto.'
+                'ERROR\n'
+                'No existe el directorio.\n'
+                'Establece un Directorio correcto.\n\n'
             )
 
 

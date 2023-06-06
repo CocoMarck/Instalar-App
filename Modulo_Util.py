@@ -568,7 +568,7 @@ def App_DirectAccess(
             ) as DirectAccess_ready:
                 DirectAccess_ready.write(text_DirectAccess)
 
-            os.system(f'chmod +x {DirectAccess}')
+            os.system(f'chmod +x "{path_DirectAccess + DirectAccess}"')
 
         elif sys == 'win':
             with open(DirectAccess, 'w') as DirectAccess_ready:
