@@ -400,6 +400,7 @@ def Create_Dir(file_dir=''):
 
 def App_DirectAccess(
         name='',
+        version=1.0,
         app_exec='',
         path='',
         categories=[''],
@@ -416,6 +417,7 @@ def App_DirectAccess(
     Y path_DirectAccess, se refiere a la ruta de cración del acceso directo. Podriamos decir que es un parametro opcional, ya que la mayoria de veces, es mejor dejarlo sin llenar.
 
     Pide como parametros:
+    version=float,
     name=str,
     app_exec=str,
     path=str,
@@ -435,6 +437,12 @@ def App_DirectAccess(
             name = 'NoName'
         else:
             pass
+            
+        # Verificar que la version sea un float
+        if type(version) is float:
+            pass
+        else:
+            version=1.0
         
         # Verificar que el icono exista
         if pathlib.Path(icon).exists():
@@ -505,10 +513,12 @@ def App_DirectAccess(
         
             text_DirectAccess = (
                 '[Desktop Entry]\n'
+                'Encoding=UTF-8\n'
                 'Type=Application\n'
+                f'Version={version}\n'
                 f'Name={name}\n'
                 f'Comment={comment}\n'
-                f'Icon={icon}\n'
+                f'Icon={Path(path)}{icon}\n'
                 f'Exec={app_exec}\n'
                 f'Path={path}\n'
                 f'Terminal={terminal}\n'

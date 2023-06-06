@@ -2,6 +2,9 @@
 #   Puedes comentar con el caracter '#'
 
 #   Funciones de Parametros:
+#version=1.0
+#   Numero flotante, vercioó del programa
+
 #path=/Ruta/De/Instalacion/Programa
 #   Ruta de intalacion por defecto.
 #   Este parametro tiene coneccion con funciones de DOS o de SHELL de Linux.
@@ -29,6 +32,7 @@
 #   Para poner categorias separados por coma y sin espacios.
 
 
+version=1.0
 path=$HOME/Programas/Herramientas/Prueba
 name=Prueba
 exec=python3

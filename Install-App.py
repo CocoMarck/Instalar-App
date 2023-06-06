@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import (
     QWidget,
     QFileDialog,
     QMessageBox,
+    QTextEdit,
     QLabel,
     QPushButton,
     QLineEdit,
@@ -40,6 +41,9 @@ if path == '':
 else:
     go = True
 
+# Version de aplicación
+app_version = float(text_dict['version'])
+
 # Aplicacion a ejecutar
 app_exec = text_dict['exec']
 
@@ -74,7 +78,7 @@ class Window_Install(QWidget):
         super().__init__(*args, **kwargs)
         
         self.setWindowTitle(f'Install - {app_name}')
-        #self.setWindowIcon(QIcon('/Ruta/Icono.png'))
+        self.setWindowIcon(QIcon(app_icon))
         self.setGeometry(100, 100, 512, 256)
         
         # Contenedor Principal
@@ -82,22 +86,29 @@ class Window_Install(QWidget):
         self.setLayout(vbox_main)
         
         # Seccion Vertical - Boton de Información de instalación
-        button_info = QPushButton('Mostrar Información de instalación')
+        button_info = QPushButton('Mostrar mas Información')
         button_info.clicked.connect(self.evt_info_install)
         vbox_main.addWidget(button_info)
         
+        # Seccion Veritical - Comentario de aplicación
+        text_edit = QTextEdit( 
+            (
+            f'Versión {app_version}\n\n'
+            
+            f'<b>{comment}</b>\n\n'
+            ).replace('\n', '<br>')
+         )
+        text_edit.setReadOnly(True)
+        vbox_main.addWidget(text_edit)
+        
         # Texto necesario
         if go == True:
-            text_help = 'Directorio Establecido'
             text_dir = path
         else:
-            text_help = 'Establece un Directorio'
             text_dir = Util.Path()
-        
-        # Seccion Vertical - Texto de Ayuda
-        label = QLabel()
-        label.setText(text_help)
-        vbox_main.addWidget(label)
+            # Seccion Vertical - Texto de Ayuda
+            label = QLabel('Establece un Directorio')
+            vbox_main.addWidget(label)
         
         # Seccion Vertical - Separador
         vbox_main.addStretch()
@@ -113,10 +124,7 @@ class Window_Install(QWidget):
             clearButtonEnabled=True
         )
         self.entry_dir.setText(text_dir)
-
         hbox.addWidget(self.entry_dir)
-        
-        hbox.addStretch()
         
         button_dir = QPushButton('Elegir Ruta')
         button_dir.clicked.connect(self.evt_set_dir)
@@ -137,6 +145,8 @@ class Window_Install(QWidget):
         Util_Qt.Dialog_TextEdit(
             self,
             text = (
+                f'<b>Versión:</b> {app_version}\n\n'
+            
                 f'<b>Ruta de instalacion por defecto:</b> {path}\n\n'
             
                 f'<b>Nombre de aplicación:</b> {app_name}\n\n'
@@ -196,6 +206,7 @@ class Window_Install(QWidget):
                 
             # Crear acceso directo
             Util.App_DirectAccess(
+                version=app_version,
                 path=self.entry_dir.text(),
                 name=app_name,
                 app_exec=app_exec,
