@@ -18,7 +18,6 @@ import Modulo_Util as Util
 import Modulo_Util_Qt as Util_Qt
 
 
-
 # Leer datos del texto de instalación
 text_installer = Util.Ignore_Comment(
         text=Util.Text_Read(
@@ -175,9 +174,6 @@ class Window_Install(QWidget):
             pass
         
     def evt_install_files(self):
-        dialog_wait = Util_Qt.Dialog_Wait(self, text='Por favor espera...')
-        dialog_wait.show()
-        
         # Crear Carpeta, si es que no existe
         Util.Create_Dir( self.entry_dir.text() )
         # Si existe la carpeta entonces
@@ -216,7 +212,6 @@ class Window_Install(QWidget):
                 categories=categories
             )
             
-            dialog_wait.close()
             # Mensaje indicador de finalizacion
             QMessageBox.information(
                 self,
@@ -225,7 +220,6 @@ class Window_Install(QWidget):
                 'Listo, aplicación instalada'
             )
         else:
-            dialog_wait.close()
             QMessageBox.critical(
                 self,
                 'Error - Dir',
