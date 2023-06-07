@@ -398,10 +398,10 @@ def Create_Dir(file_dir=''):
             pass
             
 
-def App_DirectAccess(
+def Execute_DirectAccess(
         name='',
         version=1.0,
-        app_exec='',
+        execute='',
         path='',
         categories=[''],
         comment='',
@@ -412,14 +412,14 @@ def App_DirectAccess(
     '''
     Para crear un acceso directo.
     
-    Recuerda que el parametro app_exec, se refiere a la aplicación que quieras ejecutar, por medio del acceso directo.
+    Recuerda que el parametro execute, se refiere a la aplicación que quieras ejecutar, por medio del acceso directo.
     
     Y path_DirectAccess, se refiere a la ruta de cración del acceso directo. Podriamos decir que es un parametro opcional, ya que la mayoria de veces, es mejor dejarlo sin llenar.
 
     Pide como parametros:
     version=float,
     name=str,
-    app_exec=str,
+    execute=str,
     path=str,
     categories=list[str],
     comment=str,
@@ -519,7 +519,7 @@ def App_DirectAccess(
                 f'Name={name}\n'
                 f'Comment={comment}\n'
                 f'Icon={Path(path)}{icon}\n'
-                f'Exec={app_exec}\n'
+                f'Exec={execute}\n'
                 f'Path={path}\n'
                 f'Terminal={terminal}\n'
                 f'Categories={categories_ready}'
@@ -531,10 +531,10 @@ def App_DirectAccess(
                 with open(f'{Path(path)}{name}.bat', 'w') as text_exec:
                     text_exec.write(
                         '@echo off\n'
-                        f'{app_exec}\n'
+                        f'{execute}\n'
                         'pause'
                     )
-                app_exec = f'{name}.bat'
+                execute = f'{name}.bat'
 
             else:
                 pass
@@ -549,7 +549,7 @@ def App_DirectAccess(
                 
                 # Objeto DirectAccess - Aplicacion a ejecutar
                 '    objDirectAccess.TargetPath = '
-                f'"{Path(path)}{app_exec}"\n'
+                f'"{Path(path)}{execute}"\n'
                 
                 # DirectAccess - Parametro de carpeta de trabajo
                 f'    objDirectAccess.WorkingDirectory = "{path}"\n'

@@ -135,7 +135,7 @@ class Window_Install(QWidget):
         
         # Seccion Vertical - Aceptar
         button_ok = QPushButton('Instalar App')
-        button_ok.clicked.connect(self.evt_copy_files)
+        button_ok.clicked.connect(self.evt_install_files)
         vbox_main.addWidget(button_ok)
         
         # Mostrar Ventana
@@ -174,7 +174,7 @@ class Window_Install(QWidget):
         else:
             pass
         
-    def evt_copy_files(self):
+    def evt_install_files(self):
         dialog_wait = Util_Qt.Dialog_Wait(self, text='Por favor espera...')
         dialog_wait.show()
         
@@ -205,11 +205,11 @@ class Window_Install(QWidget):
                 )
                 
             # Crear acceso directo
-            Util.App_DirectAccess(
+            Util.Execute_DirectAccess(
                 version=app_version,
                 path=self.entry_dir.text(),
                 name=app_name,
-                app_exec=app_exec,
+                execute=app_exec,
                 icon=app_icon,
                 comment=comment,
                 terminal=terminal,
