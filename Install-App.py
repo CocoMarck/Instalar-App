@@ -11,7 +11,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout
 )
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QIcon
 from pathlib import Path
 import Modulo_Util as Util
@@ -133,6 +133,8 @@ class Window_Install(QWidget):
         vbox_main.addStretch()
         
         # Seccion Vertical - Aceptar
+        self.dialog_wait = None
+        self.thread_install = None
         button_ok = QPushButton('Instalar App')
         button_ok.clicked.connect(self.evt_install_files)
         vbox_main.addWidget(button_ok)
@@ -174,60 +176,92 @@ class Window_Install(QWidget):
             pass
         
     def evt_install_files(self):
-        # Crear Carpeta, si es que no existe
-        Util.Create_Dir( self.entry_dir.text() )
-        # Si existe la carpeta entonces
-        if Path( self.entry_dir.text() ).exists():
-            # Lista de archivos
-            file_list = Util.Files_List(
-                files = '*',
-                path = './',
-                remove_path = False,
-            )
-            # Excluir de la lista de archivos
-            exclude_installer = Util.Files_List(
-                files = 'Install-App*',
-                path = './',
-                remove_path = False
-            )
-            for exclude in exclude_installer:
-                file_list.remove(exclude)
-            
-            # Copiar Archivos a la ruta asignada
-            for file_ready in file_list:
-                Util.Files_Copy( 
-                    file_ready, # Archivo
-                    self.entry_dir.text() # Ruta
+        self.dialog_wait = Util_Qt.Dialog_Wait(
+            self,
+            text='Por favor, espere...'
+        )
+        self.dialog_wait.show()
+    
+        self.thread_install = Thread_Install( 
+            path=self.entry_dir.text()
+        )
+        self.thread_install.finished.connect( self.install_ready )
+        self.thread_install.finished.connect( self.install_dialog )
+        self.thread_install.start()
+        
+    def install_ready(self):
+        if self.dialog_wait is not None:
+            self.dialog_wait.close()
+            self.dialog_wait = None
+
+        self.thread_install = None
+        
+    def install_dialog(self, message):
+        message_box = QMessageBox(self)
+        message_box.setWindowTitle('Install Complete')
+        message_box.setText(message)
+        message_box.exec()
+
+
+class Thread_Install(QThread):
+    finished = pyqtSignal(str)
+    def __init__(self, path=path):
+        super().__init__()
+        self._path = path
+
+    def run(self):
+        try:
+            # Crear Carpeta, si es que no existe
+            Util.Create_Dir( self._path )
+            # Si existe la carpeta entonces
+            if Path( self._path ).exists():
+                # Lista de archivos
+                file_list = Util.Files_List(
+                    files = '*',
+                    path = './',
+                    remove_path = False,
+                )
+                # Excluir de la lista de archivos
+                exclude_installer = Util.Files_List(
+                    files = 'Install-App*',
+                    path = './',
+                    remove_path = False
+                )
+                for exclude in exclude_installer:
+                    file_list.remove(exclude)
+                
+                # Copiar Archivos a la ruta asignada
+                for file_ready in file_list:
+                    Util.Files_Copy( 
+                        file_ready, # Archivo
+                        self._path # Ruta
+                    )
+                    
+                # Crear acceso directo
+                Util.Execute_DirectAccess(
+                    version=app_version,
+                    path=self._path,
+                    name=app_name,
+                    execute=app_exec,
+                    icon=app_icon,
+                    comment=comment,
+                    terminal=terminal,
+                    categories=categories
                 )
                 
-            # Crear acceso directo
-            Util.Execute_DirectAccess(
-                version=app_version,
-                path=self.entry_dir.text(),
-                name=app_name,
-                execute=app_exec,
-                icon=app_icon,
-                comment=comment,
-                terminal=terminal,
-                categories=categories
-            )
+                # Mensaje indicador de finalizacion
+                message = 'Instalacion Satisfactoria'
             
-            # Mensaje indicador de finalizacion
-            QMessageBox.information(
-                self,
-                'Install Complete',
-                
-                'Listo, aplicación instalada'
-            )
-        else:
-            QMessageBox.critical(
-                self,
-                'Error - Dir',
-                
+            else:
+                message ='ERROR - Directorio incorrecto.'
+        except:
+            message = (
                 'ERROR\n'
-                'No existe el directorio.\n'
-                'Establece un Directorio correcto.\n\n'
+                'El programa necesita permisos de administrador.\n'
+                'O algun parametro es incorrecto.'
             )
+        
+        self.finished.emit(message)
 
 
 if __name__ == '__main__':

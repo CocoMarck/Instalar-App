@@ -1,5 +1,5 @@
-import Modulo_Util as Util
 from PyQt6.QtWidgets import(
+    QWidget,
     QDialog,
     QPushButton,
     QLabel,
@@ -7,10 +7,12 @@ from PyQt6.QtWidgets import(
     QVBoxLayout,
     QHBoxLayout
 )
+import Modulo_Util as Util
+
 
 class Dialog_TextEdit(QDialog):
     def __init__(self, parent=None, text='Default text, waiting text...'):
-        super().__init__(parent=None)
+        super().__init__(parent)
         
         self.setWindowTitle('Text')
         self.setMinimumWidth(512)
@@ -36,7 +38,7 @@ class Dialog_TextEdit(QDialog):
 
 class Dialog_Command_Run(QDialog):
     def __init__(self, parent=None, cmd='', cfg_file=''):
-        super().__init__(parent=None)
+        super().__init__(parent)
         
         self.setWindowTitle('Command Run')
         self.setMinimumWidth(512)
@@ -73,11 +75,11 @@ class Dialog_Command_Run(QDialog):
                 cfg_file.write(self.cmd + f'\n#{Util.Separator(see=False)}\n')
                 
         Util.Command_Run(self.cmd)
-        
+
 
 class Dialog_Wait(QDialog):
     def __init__(self, parent=None, text='Wait please'):
-        super().__init__(parent=None)
+        super().__init__(parent)
         
         self.setWindowTitle('Wait')
         self.setGeometry(100, 100, 256, 128)
