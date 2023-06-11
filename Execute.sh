@@ -1,4 +1,4 @@
-Test=Install-App.py
+Test=Install-App_Qt.py
 
 clear
 ls $Test
