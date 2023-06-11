@@ -124,14 +124,14 @@ class Window_Install(QWidget):
         if self.dialog_wait is not None:
             self.dialog_wait.close()
             self.dialog_wait = None
-
-        self.thread_install = None
         
     def install_dialog(self, message):
+        # Mostrar mensaje y parar QThread - Hilo
         message_box = QMessageBox(self)
         message_box.setWindowTitle('Install Complete')
         message_box.setText(message)
         message_box.exec()
+        self.thread_install = None
 
 
 class Thread_Install(QThread):
