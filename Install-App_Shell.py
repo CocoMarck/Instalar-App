@@ -48,9 +48,11 @@ def Install_Menu():
         
         elif option == '2':
             # Cambiar ruta de instalación
-            path = input(
-                Util.Title('Establcer Carpeta', see=False) +
-                'Ruta de carpeta: '
+            path = Util.Path(
+                input(
+                    Util.Title('Establcer Carpeta', see=False) +
+                    'Ruta de carpeta: '
+                )
             )
 
         elif option == '1':

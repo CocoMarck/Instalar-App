@@ -7,68 +7,15 @@ from pathlib import Path
 import threading
 import Modulo_Util as Util
 import Modulo_Util_Gtk as Util_Gtk
-
-
-# Leer datos del texto de instalación
-text_installer = Util.Ignore_Comment(
-        text=Util.Text_Read(
-            file_and_path='./Install-App.dat',
-            opc='ModeText'
-        ),
-        comment='#'
-    )
-
-# Separarar datos del texto de instalacion, sobre caracteres '='
-text_dict = Util.Text_Separe(
-        text=text_installer,
-        text_separe='='
-    )
-    
-# Agregar Informacion del texto de instalacion, en las variables
-path = Util.View_echo(text=text_dict['path'])
-if path == '':
-    go = False
-else:
-    go = True
-
-# Version de aplicación
-app_version = float(text_dict['version'])
-
-# Aplicacion a ejecutar
-app_exec = text_dict['exec']
-
-# Nombre de aplicación
-app_name = text_dict['name']
-
-# Icono de aplicacion
-app_icon = text_dict['icon']
-
-# Comentario
-comment = text_dict['comment']
-
-# Abir o no en Terminal
-terminal = text_dict['terminal']
-if terminal == 'True':
-    terminal = True
-elif terminal == 'False':
-    terminal = False
-else:
-    terminal = False
-
-# Categorias
-categories = text_dict['categories']
-categories_list = []
-for categorie in categories.split(','):
-    categories_list.append(categorie)
-categories = categories_list
+import Modulo_InstallApp as InstallApp
 
 
 class Window_Install(Gtk.Window):
     def __init__(self):
-        super().__init__(title=f'Install {app_name}')
+        super().__init__(title=f'Install {InstallApp.Name()}')
         self.set_resizable(True)
         self.set_default_size(512, 256)
-        self.set_icon_from_file(app_icon)
+        self.set_icon_from_file(InstallApp.Icon())
         
         # Contenedor principal - VBox
         vbox_main = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
@@ -89,23 +36,23 @@ class Window_Install(Gtk.Window):
 
         text_buffer = text_view.get_buffer()
         text_buffer.set_text(
-            f'Versión {app_version}\n\n'
+            f'Versión {InstallApp.Version()}\n\n'
 
-            f'{comment}\n\n'
+            f'{InstallApp.Comment()}\n\n'
         )
 
         text_scroll.add(text_view)
         
         vbox_main.pack_start(text_scroll, True, True, 0)
         
-        # Texto de ayuda
-        if go == True:
-            text_dir = path
-        else:
+        # Texto de ayuda, por si no hay path
+        if InstallApp.Path() == '':
             text_dir = Util.Path()
             # Seccion Vertical - Texto de Ayuda
             label = Gtk.Label(label='Establece un directorio')
             vbox_main.pack_start(label, True, False, 0)
+        else:
+            text_dir = InstallApp.Path()
         
         # Seccion Vertical - Directorio
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
@@ -134,23 +81,7 @@ class Window_Install(Gtk.Window):
     def evt_info_install(self, widget):
         dialog = Util_Gtk.Dialog_TextView(
             self,
-            text=(
-                f'Versión: {app_version}\n\n'
-            
-                f'Ruta de instalacion por defecto: {path}\n\n'
-            
-                f'Nombre de aplicación: {app_name}\n\n'
-
-                f'Aplicación a ejecutar: {app_exec}\n\n'
-                
-                f'Icono: {app_icon}\n\n'
-                
-                f'Comentario de aplicación: {comment}\n\n'
-
-                f'Ejecutar por terminal: {terminal}\n\n'
-
-                f'Lista de categorias: {categories}'
-            )
+            text=InstallApp.Information()
         )
         dialog.run()
         dialog.destroy()
@@ -189,56 +120,9 @@ class Window_Install(Gtk.Window):
         self.dialog_wait.run()
     
     def thread_install(self):
-        try:
-            # Crear Carpeta, si es que no existe
-            Util.Create_Dir( self.entry_dir.get_text() )
-            # Si existe la carpeta entonces
-            if Path( self.entry_dir.get_text() ).exists():
-                # Lista de archivos
-                file_list = Util.Files_List(
-                    files = '*',
-                    path = './',
-                    remove_path = False,
-                )
-                # Excluir de la lista de archivos
-                exclude_installer = Util.Files_List(
-                    files = 'Install-App*',
-                    path = './',
-                    remove_path = False
-                )
-                for exclude in exclude_installer:
-                    file_list.remove(exclude)
-                
-                # Copiar Archivos a la ruta asignada
-                for file_ready in file_list:
-                    Util.Files_Copy( 
-                        file_ready, # Archivo
-                        self.entry_dir.get_text() # Ruta
-                    )
-                    
-                # Crear acceso directo
-                Util.Execute_DirectAccess(
-                    version=app_version,
-                    path=self.entry_dir.get_text(),
-                    name=app_name,
-                    execute=app_exec,
-                    icon=app_icon,
-                    comment=comment,
-                    terminal=terminal,
-                    categories=categories
-                )
-                
-                # Mensaje indicador de finalizacion
-                self.message = 'Instalacion Satisfactoria'
-            
-            else:
-                self.message ='ERROR - Directorio incorrecto.'
-        except:
-            self.message = (
-                'ERROR\n'
-                'El programa necesita permisos de administrador.\n'
-                'O algun parametro es incorrecto.'
-            )
+        self.message = InstallApp.Install(
+            path=self.entry_dir.get_text()
+        )
         
         GLib.idle_add(self.thread_install_finish)
     
