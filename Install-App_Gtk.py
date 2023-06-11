@@ -3,7 +3,6 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
 
-from pathlib import Path
 import threading
 import Modulo_Util as Util
 import Modulo_Util_Gtk as Util_Gtk
