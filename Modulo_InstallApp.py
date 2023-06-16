@@ -1,5 +1,9 @@
 from pathlib import Path as pathlib
 import Modulo_Util as Util
+from Modulo_Language import Language
+
+
+lang = Language()
 
 
 # Leer datos del texto de instalación
@@ -106,15 +110,15 @@ def Install(path=''):
             )
             
             # Mensaje indicador de finalizacion
-            message = 'Instalacion Satisfactoria'
+            message = lang['fin_install']
         
         else:
-            message ='ERROR - Directorio incorrecto.'
+            message = f'ERROR - {lang["error_dir"]}'
     except:
         message = (
             'ERROR\n'
-            'El programa necesita permisos de administrador.\n'
-            'O algun parametro es incorrecto.'
+            f'- {lang["error_admin"]}\n'
+            f'- {lang["error_parameter"]}'
         )
     
     return message
@@ -123,19 +127,19 @@ def Install(path=''):
 def Information():
     '''Mostrar información de instalación'''
     return(
-        f'Versión: {Version()}\n\n'
+        f'{lang["ver"]}: {Version()}\n\n'
     
-        f'Ruta de instalacion por defecto: {Path()}\n\n'
+        f'{lang["dir"]}: {Path()}\n\n'
     
-        f'Nombre de aplicación: {Name()}\n\n'
+        f'{lang["name"]}: {Name()}\n\n'
 
-        f'Aplicación a ejecutar: {Exec()}\n\n'
+        f'{lang["exec"]}: {Exec()}\n\n'
         
-        f'Icono: {Icon()}\n\n'
+        f'{lang["icon"]}: {Icon()}\n\n'
         
-        f'Comentario de aplicación: {Comment()}\n\n'
+        f'{lang["comment"]}: {Comment()}\n\n'
 
-        f'Ejecutar por terminal: {Terminal()}\n\n'
+        f'{lang["terminal"]}: {Terminal()}\n\n'
 
-        f'Lista de categorias: {Categories()}'
+        f'{lang["categories"]}: {Categories()}'
     )

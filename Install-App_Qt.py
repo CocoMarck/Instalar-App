@@ -17,13 +17,17 @@ from pathlib import Path
 import Modulo_Util as Util
 import Modulo_Util_Qt as Util_Qt
 import Modulo_InstallApp as InstallApp
+from Modulo_Language import Language
+
+
+lang = Language()
 
 
 class Window_Install(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        self.setWindowTitle(f'Install - {InstallApp.Name()}')
+        self.setWindowTitle(f'{lang["install"]} - {InstallApp.Name()}')
         self.setWindowIcon(QIcon( InstallApp.Icon() ))
         self.setGeometry(100, 100, 512, 256)
         
@@ -32,14 +36,14 @@ class Window_Install(QWidget):
         self.setLayout(vbox_main)
         
         # Seccion Vertical - Boton de Información de instalación
-        button_info = QPushButton('Mostrar mas Información')
+        button_info = QPushButton(lang['more_info'])
         button_info.clicked.connect(self.evt_info_install)
         vbox_main.addWidget(button_info)
         
         # Seccion Veritical - Comentario de aplicación
         text_edit = QTextEdit( 
             (
-            f'Versión {InstallApp.Version()}\n\n'
+            f'{lang["ver"]} {InstallApp.Version()}\n\n'
             
             f'<b>{InstallApp.Comment()}</b>\n\n'
             ).replace('\n', '<br>')
@@ -51,7 +55,7 @@ class Window_Install(QWidget):
         if InstallApp.Path() == '':
             text_dir = Util.Path()
             # Seccion Vertical - Texto de Ayuda
-            label = QLabel('Establece un Directorio')
+            label = QLabel( lang['set_dir'] )
             vbox_main.addWidget(label)
         else:
             text_dir = InstallApp.Path()
@@ -66,13 +70,13 @@ class Window_Install(QWidget):
         self.entry_dir = QLineEdit(
             self,
             maxLength=90,
-            placeholderText='Establece el Directorio',
+            placeholderText=lang['dir'],
             clearButtonEnabled=True
         )
         self.entry_dir.setText(text_dir)
         hbox.addWidget(self.entry_dir)
         
-        button_dir = QPushButton('Elegir Ruta')
+        button_dir = QPushButton( lang['set_dir'] )
         button_dir.clicked.connect(self.evt_set_dir)
         hbox.addWidget(button_dir)
         
@@ -82,7 +86,7 @@ class Window_Install(QWidget):
         # Seccion Vertical - Aceptar
         self.dialog_wait = None
         self.thread_install = None
-        button_ok = QPushButton('Instalar App')
+        button_ok = QPushButton( lang['install'] )
         button_ok.clicked.connect(self.evt_install_files)
         vbox_main.addWidget(button_ok)
         
@@ -98,7 +102,7 @@ class Window_Install(QWidget):
     def evt_set_dir(self):
         dir_name = QFileDialog.getExistingDirectory(
             self,
-            'Seleccionar Diractorio/Carpeta',   # Titulo
+            lang['set_dir'],                    # Titulo
             self.entry_dir.text()               # Directorio de busqueda
         )
         if dir_name:
@@ -109,7 +113,7 @@ class Window_Install(QWidget):
     def evt_install_files(self):
         self.dialog_wait = Util_Qt.Dialog_Wait(
             self,
-            text='Por favor, espere...'
+            text=lang['help_wait']
         )
         self.dialog_wait.show()
     
@@ -128,7 +132,7 @@ class Window_Install(QWidget):
     def install_dialog(self, message):
         # Mostrar mensaje y parar QThread - Hilo
         message_box = QMessageBox(self)
-        message_box.setWindowTitle('Install Complete')
+        message_box.setWindowTitle(lang['finalized'])
         message_box.setText(message)
         message_box.exec()
         self.thread_install = None
@@ -136,7 +140,7 @@ class Window_Install(QWidget):
 
 class Thread_Install(QThread):
     finished = pyqtSignal(str)
-    def __init__(self, path='/Ruta/Necesaria'):
+    def __init__(self, path='/dir/arch'):
         super().__init__()
         self._path = path
 

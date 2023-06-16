@@ -7,11 +7,17 @@ import threading
 import Modulo_Util as Util
 import Modulo_Util_Gtk as Util_Gtk
 import Modulo_InstallApp as InstallApp
+from Modulo_Language import Language
+
+
+lang = Language()
 
 
 class Window_Install(Gtk.Window):
     def __init__(self):
-        super().__init__(title=f'Install {InstallApp.Name()}')
+        super().__init__(
+            title=f'{lang["install"]} - {InstallApp.Name()}'
+        )
         self.set_resizable(True)
         self.set_default_size(512, 256)
         self.set_icon_from_file(InstallApp.Icon())
@@ -20,7 +26,7 @@ class Window_Install(Gtk.Window):
         vbox_main = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         
         # Seccion Veritcal - Boton de Información adicional
-        button_info = Gtk.Button(label='Mostrar mas información')
+        button_info = Gtk.Button( label=lang['more_info'] )
         button_info.connect('clicked', self.evt_info_install)
         vbox_main.pack_start(button_info, False, False, 0)
         
@@ -35,7 +41,7 @@ class Window_Install(Gtk.Window):
 
         text_buffer = text_view.get_buffer()
         text_buffer.set_text(
-            f'Versión {InstallApp.Version()}\n\n'
+            f'{lang["ver"]} {InstallApp.Version()}\n\n'
 
             f'{InstallApp.Comment()}\n\n'
         )
@@ -48,7 +54,7 @@ class Window_Install(Gtk.Window):
         if InstallApp.Path() == '':
             text_dir = Util.Path()
             # Seccion Vertical - Texto de Ayuda
-            label = Gtk.Label(label='Establece un directorio')
+            label = Gtk.Label( label=lang['set_dir'] )
             vbox_main.pack_start(label, True, False, 0)
         else:
             text_dir = InstallApp.Path()
@@ -58,19 +64,19 @@ class Window_Install(Gtk.Window):
         vbox_main.pack_start(hbox, False, False, 8 )
         
         self.entry_dir = Gtk.Entry()
-        self.entry_dir.set_placeholder_text('Establece un directorio')
+        self.entry_dir.set_placeholder_text( lang['dir'] )
         self.entry_dir.set_hexpand(True)
         self.entry_dir.set_text(text_dir)
         hbox.pack_start(self.entry_dir, True, True, 0)
         
-        button_dir = Gtk.Button(label='Elegir ruta')
+        button_dir = Gtk.Button( label=lang['set_dir'] )
         button_dir.connect('clicked', self.evt_set_dir)
         hbox.pack_end(button_dir, False, False, 0)
         
         # Seccion Vertical - Boton aceptar
         #self.dialog_wait = None
         #self.thread = None
-        button_ok = Gtk.Button(label='Instalar App')
+        button_ok = Gtk.Button( label=lang['install'] )
         button_ok.connect('clicked', self.evt_install_files)
         vbox_main.pack_end(button_ok, False, False, 0)
         
@@ -88,7 +94,7 @@ class Window_Install(Gtk.Window):
     def evt_set_dir(self, widget):
         dialog = Gtk.FileChooserDialog(
             parent=self,
-            title='Select one Folder',
+            title=lang['set_dir'],
             action=Gtk.FileChooserAction.SELECT_FOLDER
         )
         dialog.add_buttons(
@@ -109,7 +115,7 @@ class Window_Install(Gtk.Window):
         
     def evt_install_files(self, widget):
         self.dialog_wait = Util_Gtk.Dialog_Wait(
-            self, text='Por favor espera...\n'
+            self, text=lang['wait']
         )
 
         # Hilo - Subproceso para que no se conjele el loop de la app
