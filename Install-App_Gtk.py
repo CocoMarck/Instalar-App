@@ -4,10 +4,11 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GLib
 
 import threading
-import Modulo_Util as Util
-import Modulo_Util_Gtk as Util_Gtk
-import Modulo_InstallApp as InstallApp
-from Modulo_Language import Language
+
+from Modulos import Modulo_Util as Util
+from Modulos import Modulo_InstallApp as InstallApp
+from Modulos.Modulo_Language import Language
+from Interface import Modulo_Util_Gtk as Util_Gtk
 
 
 lang = Language()

@@ -1,6 +1,6 @@
 from pathlib import Path
-import Modulo_Util as Util
-import Modulo_InstallApp as InstallApp
+from Modulos import Modulo_Util as Util
+from Modulos import Modulo_InstallApp as InstallApp
 
 
 def Install_Menu():

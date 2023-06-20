@@ -7,8 +7,9 @@ from PyQt6.QtWidgets import(
     QVBoxLayout,
     QHBoxLayout
 )
-import Modulo_Util as Util
-from Modulo_Language import Language
+
+from Modulos import Modulo_Util as Util
+from Modulos.Modulo_Language import Language
 
 
 lang = Language()

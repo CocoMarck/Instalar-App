@@ -14,13 +14,14 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QIcon
 from pathlib import Path
-import Modulo_Util as Util
-import Modulo_Util_Qt as Util_Qt
-import Modulo_InstallApp as InstallApp
-from Modulo_Language import Language
+
+from Modulos import Modulo_Util as Util
+from Modulos import Modulo_InstallApp as InstallApp
+from Modulos import Modulo_Language as Lang
+from Interface import Modulo_Util_Qt as Util_Qt
 
 
-lang = Language()
+lang = Lang.Language()
 
 
 class Window_Install(QWidget):

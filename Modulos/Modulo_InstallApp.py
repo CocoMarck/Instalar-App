@@ -1,6 +1,6 @@
 from pathlib import Path as pathlib
-import Modulo_Util as Util
-from Modulo_Language import Language
+from . import Modulo_Util as Util
+from .Modulo_Language import Language
 
 
 lang = Language()
@@ -9,7 +9,7 @@ lang = Language()
 # Leer datos del texto de instalación
 text_installer = Util.Ignore_Comment(
         text=Util.Text_Read(
-            file_and_path='./Install-App.dat',
+            file_and_path='./data/Install-App.dat',
             opc='ModeText'
         ),
         comment='#'
