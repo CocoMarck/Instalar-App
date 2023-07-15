@@ -1,6 +1,15 @@
 from pathlib import Path
 from Modulos import Modulo_Util as Util
 from Modulos import Modulo_InstallApp as InstallApp
+from Modulos.Modulo_Language import (
+    YesNo,
+    get_text as Lang
+)
+
+from Modulos.Modulo_ShowPrint import (
+    Continue,
+    Title
+)
 
 
 def Install_Menu():
@@ -15,28 +24,28 @@ def Install_Menu():
     while loop == True:
         # Opciones
         Util.CleanScreen()
-        Util.Title(f'Install {InstallApp.Name()}')
+        Title(f'{Lang("install")} {InstallApp.Name()}')
         text_menu = (
-            f'Version: {InstallApp.Version()}\n\n'
+            f'{Lang("ver")}: {InstallApp.Version()}\n\n'
 
             f'{InstallApp.Comment()}\n\n'
             
-            f'Ruta de instalación: {path}\n\n'
+            f'{Lang("dir")}: {path}\n\n'
         )
         option = input(
             text_menu +
-            f'3. Mostrar información de instalación\n'
-            f'2. Cambiar ruta de instalación\n'
-            f'1. Instalar App\n'
-            f'0. Salir\n'
-            'Elige una opción: '
+            f'3. {Lang("more_info")}\n'
+            f'2. {Lang("set_dir")}\n'
+            f'1. {Lang("install")}\n'
+            f'0. {Lang("exit")}\n'
+            f'{Lang("set_option")}: '
         )
         
         # Elegir o no la opcion
-        option_continue = Util.Continue()
-        if option_continue == 's':
+        option_continue = Continue()
+        if option_continue == YesNo('yes'):
             pass
-        elif option_continue == 'n':
+        elif option_continue == YesNo('no'):
             option = None
         
         # Opcion elegida
@@ -50,21 +59,21 @@ def Install_Menu():
             # Cambiar ruta de instalación
             path = Util.Path(
                 input(
-                    Util.Title('Establcer Carpeta', see=False) +
-                    'Ruta de carpeta: '
+                    Title(Lang('set_dir'), print_mode=False) +
+                    f'{Lang("dir")}: '
                 )
             )
 
         elif option == '1':
             # Instalar App
+            Title(f'{Lang("install")} {InstallApp.Name()}')
             print(
-                f'Instalando {InstallApp.Name()}\n'
-                'Por favor espere...\n'
+                f'{Lang("help_wait")}...\n'
             )
 
             print(InstallApp.Install(path=path) + '\n')
 
-            input('Preciona enter para continuar...')
+            input(f'{Lang("continue_enter")}...')
 
         elif option == '0':
             # Salir del loop y de la aplicación
@@ -76,7 +85,7 @@ def Install_Menu():
 
         else:
             # Opcion inexistente
-            Util.Continue(txt=option, msg=True)
+            Continue(text=option, message_error=True)
             
     else:
         # Loop finaliza
