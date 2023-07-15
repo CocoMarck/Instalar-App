@@ -388,7 +388,7 @@ def Create_Dir(file_dir=''):
             # Separar Carpetas basado en los slash
             dir_ready = ''
             for text_dir in file_dir.split(slash):
-                dir_ready = f'{dir_ready}{slash}{text_dir}'
+                dir_ready += f'{text_dir}{slash}'
 
                 if pathlib.Path(dir_ready).exists():
                     # Si existe la carpeta
