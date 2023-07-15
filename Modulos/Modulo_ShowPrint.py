@@ -43,6 +43,7 @@ def Title(
 
     elif print_mode == False:
         # Devolver texto
+        text += '\n'
         return text
 
     else:
