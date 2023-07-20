@@ -1,0 +1,42 @@
+# Archivo de configuración de la instalación
+#   Puedes comentar con el caracter '#'
+
+#   Funciones de Parametros:
+#version=1.0
+#   Numero flotante, vercioó del programa
+
+#path=/Ruta/De/Instalacion/Programa
+#   Ruta de intalacion por defecto.
+#   Este parametro tiene coneccion con funciones de DOS o de SHELL de Linux.
+#   Aqui funciona poner por ejemplo %USERPROFILE%, o $HOME.
+#   Puede funcionar esto: $HOME/Programas/Aplicacion
+#   Puede funcionar esto: %USERPROFILE%\Aplicacion
+
+#name=Nombre
+#   El nombre que tendra el programa
+
+#exec=Ejecutable
+#   Aplicacion a ejecutar. Escribe el ejecutable.
+#   Tambien puedes escribir ordenes, pero no se garantiza funcionar.
+
+#icon=/Ruta/De/Icono
+#   Un icono que le pertenesca el programa
+
+#comment=Comentario
+#   Un comentario acerca del programa
+
+#terminal=True/False
+#   Pasa un True o un False, para indicar que se ejecute en terminal o no
+
+#categories=Categoria1,Categoria2,CategoriaFIN
+#   Para poner categorias separados por coma y sin espacios.
+
+
+version=1.0
+path=$HOME/Programas/Herramientas/Instalado/Prueba
+name=Prueba
+exec=python3
+icon=Icon-Prueba.png
+comment=Comentario, tambien de prueba
+terminal=True
+categories=System,Audio

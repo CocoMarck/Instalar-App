@@ -30,7 +30,7 @@ class Window_Install(QWidget):
         
         self.setWindowTitle(f'{lang["install"]} - {InstallApp.Name()}')
         self.setWindowIcon(QIcon( InstallApp.Icon() ))
-        self.setGeometry(100, 100, 512, 256)
+        self.resize(512, 256)
         
         # Contenedor Principal
         vbox_main = QVBoxLayout()
