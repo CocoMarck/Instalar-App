@@ -89,7 +89,7 @@ class Dialog_Wait(QDialog):
         super().__init__(parent)
         
         self.setWindowTitle( lang['wait'] )
-        self.setGeometry(100, 100, 256, 128)
+        self.resize(256, 128)
         
         # Contenedor Pincipal
         vbox_main = QVBoxLayout()
