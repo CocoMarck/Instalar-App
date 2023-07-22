@@ -89,7 +89,7 @@ def Install_Menu():
             
     else:
         # Loop finaliza
-        exit()
+        pass
 
 
 if __name__ == '__main__':
