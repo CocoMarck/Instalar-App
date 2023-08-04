@@ -5,7 +5,9 @@ from gi.repository import Gtk, GLib
 
 import threading
 
-from Modulos import Modulo_Util as Util
+from Modulos.Modulo_Files import(
+    Path
+)
 from Modulos import Modulo_InstallApp as InstallApp
 from Modulos.Modulo_Language import Language
 from Interface import Modulo_Util_Gtk as Util_Gtk
@@ -53,7 +55,7 @@ class Window_Install(Gtk.Window):
         
         # Texto de ayuda, por si no hay path
         if InstallApp.Path() == '':
-            text_dir = Util.Path()
+            text_dir = Path()
             # Seccion Vertical - Texto de Ayuda
             label = Gtk.Label( label=lang['set_dir'] )
             vbox_main.pack_start(label, True, False, 0)

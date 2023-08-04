@@ -8,7 +8,12 @@ from PyQt6.QtWidgets import(
     QHBoxLayout
 )
 
-from Modulos import Modulo_Util as Util
+from Modulos.Modulo_System import(
+    Command_Run
+)
+from Modulos.Modulo_ShowPrint import(
+    Separator
+)
 from Modulos.Modulo_Language import Language
 
 
@@ -79,9 +84,9 @@ class Dialog_Command_Run(QDialog):
             pass
         else:
             with open(self.cfg_file, 'a') as cfg_file:
-                cfg_file.write(self.cmd + f'\n#{Util.Separator(see=False)}\n')
+                cfg_file.write(self.cmd + f'\n#{Separator(see=False)}\n')
                 
-        Util.Command_Run(self.cmd)
+        Command_Run(self.cmd)
 
 
 class Dialog_Wait(QDialog):

@@ -1,6 +1,13 @@
 from pathlib import Path
-from Modulos import Modulo_Util as Util
 from Modulos import Modulo_InstallApp as InstallApp
+
+from Modulos.Modulo_System import (
+    CleanScreen
+)
+
+from Modulos.Modulo_Files import(
+    Path
+)
 from Modulos.Modulo_Language import (
     YesNo,
     get_text as Lang
@@ -15,7 +22,7 @@ from Modulos.Modulo_ShowPrint import (
 def Install_Menu():
     # Verificar que exista el texto del path
     if InstallApp.Path() == '':
-        path = Util.Path()
+        path = Path()
     else:
         path = InstallApp.Path()
 
@@ -23,7 +30,7 @@ def Install_Menu():
     loop = True
     while loop == True:
         # Opciones
-        Util.CleanScreen()
+        CleanScreen()
         Title(f'{Lang("install")} {InstallApp.Name()}')
         text_menu = (
             f'{Lang("ver")}: {InstallApp.Version()}\n\n'
@@ -49,7 +56,7 @@ def Install_Menu():
             option = None
         
         # Opcion elegida
-        Util.CleanScreen()
+        CleanScreen()
         if option == '3':
             # Mostrar Información de instalacion
             input(InstallApp.Information())
@@ -57,7 +64,7 @@ def Install_Menu():
         
         elif option == '2':
             # Cambiar ruta de instalación
-            path = Util.Path(
+            path = Path(
                 input(
                     Title(Lang('set_dir'), print_mode=False) +
                     f'{Lang("dir")}: '

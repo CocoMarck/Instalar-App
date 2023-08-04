@@ -15,7 +15,9 @@ from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QIcon
 from pathlib import Path
 
-from Modulos import Modulo_Util as Util
+from Modulos.Modulo_Files import(
+    Path
+)
 from Modulos import Modulo_InstallApp as InstallApp
 from Modulos import Modulo_Language as Lang
 from Interface import Modulo_Util_Qt as Util_Qt
@@ -54,7 +56,7 @@ class Window_Install(QWidget):
         
         # Texto necesario, por si no hay path
         if InstallApp.Path() == '':
-            text_dir = Util.Path()
+            text_dir = Path()
             # Seccion Vertical - Texto de Ayuda
             label = QLabel( lang['set_dir'] )
             vbox_main.addWidget(label)
