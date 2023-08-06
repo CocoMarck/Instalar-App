@@ -1,6 +1,7 @@
 from .Modulo_Language import (
     Language,
-    YesNo
+    YesNo,
+    get_text
 )
 from .Modulo_System import (
     CleanScreen,
@@ -152,3 +153,16 @@ def Separator(
         print(separator)
     else:
         return separator
+
+
+def Archive_Path(text='Archivo'):
+    from .Modulo_Files import Path, Name
+    CleanScreen()
+    
+    Title(f'{get_text("dir")} - {text}')
+    cfg = Path(input(f'{get_text("set_dir")}: '))
+    
+    Title(f'{get_text("name")} - {text}')
+    cfg = cfg + Name(input(f'{get_text("name")}: '))
+    
+    return cfg

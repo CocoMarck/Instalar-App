@@ -39,6 +39,15 @@ def Path(path='', system=get_system()):
     return path
 
 
+def Name(name=''):
+    '''Elegir el nombre de un archivo'''
+    if name == '':
+        name ='No_name'
+    else: pass
+
+    return name
+
+
 def Files_List(files='', path='', remove_path=False):
     '''Te lista los archivos existentes en una ruta espaficada'''
     # Buscar archivos

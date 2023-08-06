@@ -169,10 +169,14 @@ class Dialog_Command_Run(Gtk.Dialog):
         else:
             with open(self.cfg_file, 'a') as file_cfg:
                     file_cfg.write(
-                        self.cfg + f'\n#{Separator(print_mode=False)}\n'
+                        self.cfg + f'\n{Separator(print_mode=False)}\n'
                     )
                 
-        Command_Run(self.cfg)
+        Command_Run(
+            cmd=self.cfg,
+            open_new_terminal=True,
+            text_input=lang['continue_enter']
+        )
 
 
 class Dialog_Wait(Gtk.Dialog):
