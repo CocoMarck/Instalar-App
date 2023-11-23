@@ -103,7 +103,7 @@ class Window_Install(Gtk.Window):
         dialog.add_buttons(
             Gtk.STOCK_CANCEL,
             Gtk.ResponseType.CANCEL,
-            'Select',
+            lang['set_dir'],
             Gtk.ResponseType.OK
         )
         dialog.set_current_folder( self.entry_dir.get_text() )
