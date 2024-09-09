@@ -5,12 +5,12 @@ from gi.repository import Gtk, GLib
 
 import threading
 
-from Modulos.Modulo_Files import(
+from logic.Modulo_Files import(
     Path
 )
-from Modulos import Modulo_InstallApp as InstallApp
-from Modulos.Modulo_Language import Language
-from Interface import Modulo_Util_Gtk as Util_Gtk
+from data import Modulo_InstallApp as InstallApp
+from data.Modulo_Language import Language
+from interface import Modulo_Util_Gtk as Util_Gtk
 
 
 lang = Language()

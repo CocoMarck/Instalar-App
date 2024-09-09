@@ -1,19 +1,19 @@
 from pathlib import Path
-from Modulos import Modulo_InstallApp as InstallApp
+from data import Modulo_InstallApp as InstallApp
 
-from Modulos.Modulo_System import (
+from logic.Modulo_System import (
     CleanScreen
 )
 
-from Modulos.Modulo_Files import(
+from logic.Modulo_Files import(
     Path
 )
-from Modulos.Modulo_Language import (
+from data.Modulo_Language import (
     YesNo,
     get_text as Lang
 )
 
-from Modulos.Modulo_ShowPrint import (
+from interface.Modulo_ShowPrint import (
     Continue,
     Title
 )

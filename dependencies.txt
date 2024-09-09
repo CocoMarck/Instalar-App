@@ -1,0 +1,6 @@
+- python >= 3
+- screeninfo (from pip)
+- deeptranslator (from pip)
+- ffmpeg (compilated app)
+- PyQt
+- PyGtk

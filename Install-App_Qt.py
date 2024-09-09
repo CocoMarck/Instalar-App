@@ -15,12 +15,12 @@ from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QIcon
 from pathlib import Path
 
-from Modulos.Modulo_Files import(
+from logic.Modulo_Files import(
     Path
 )
-from Modulos import Modulo_InstallApp as InstallApp
-from Modulos import Modulo_Language as Lang
-from Interface import Modulo_Util_Qt as Util_Qt
+from data import Modulo_InstallApp as InstallApp
+from data import Modulo_Language as Lang
+from interface import Modulo_Util_Qt as Util_Qt
 
 
 lang = Lang.Language()
