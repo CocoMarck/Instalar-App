@@ -18,9 +18,13 @@ from pathlib import Path
 from logic.Modulo_Files import(
     Path
 )
-from data import Modulo_InstallApp as InstallApp
+from entities import InstallApp
+from data.Modulo_InstallApp import *
 from data import Modulo_Language as Lang
 from interface import Modulo_Util_Qt as Util_Qt
+
+data_InstallApp = InstallApp
+read_InstallApp( data_InstallApp )
 
 
 lang = Lang.Language()
@@ -30,8 +34,8 @@ class Window_Install(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        self.setWindowTitle(f'{lang["install"]} - {InstallApp.Name()}')
-        self.setWindowIcon(QIcon( InstallApp.Icon() ))
+        self.setWindowTitle(f'{lang["install"]} - {data_InstallApp.name}')
+        self.setWindowIcon(QIcon( data_InstallApp.icon ))
         self.resize(512, 256)
         
         # Contenedor Principal
@@ -46,22 +50,22 @@ class Window_Install(QWidget):
         # Seccion Veritical - Comentario de aplicación
         text_edit = QTextEdit( 
             (
-            f'{lang["ver"]} {InstallApp.Version()}\n\n'
+            f'{lang["ver"]} {data_InstallApp.version}\n\n'
             
-            f'<b>{InstallApp.Comment()}</b>\n\n'
+            f'<b>{data_InstallApp.comment}</b>\n\n'
             ).replace('\n', '<br>')
          )
         text_edit.setReadOnly(True)
         vbox_main.addWidget(text_edit)
         
         # Texto necesario, por si no hay path
-        if InstallApp.Path() == '':
+        if data_InstallApp.path == '':
             text_dir = Path()
             # Seccion Vertical - Texto de Ayuda
             label = QLabel( lang['set_dir'] )
             vbox_main.addWidget(label)
         else:
-            text_dir = InstallApp.Path()
+            text_dir = data_InstallApp.path
         
         # Seccion Vertical - Separador
         vbox_main.addStretch()
@@ -99,7 +103,7 @@ class Window_Install(QWidget):
     def evt_info_install(self):
         Util_Qt.Dialog_TextEdit(
             self,
-            text = InstallApp.Information()
+            text = Information( data_InstallApp )
         ).exec()
         
     def evt_set_dir(self):
@@ -148,7 +152,7 @@ class Thread_Install(QThread):
         self._path = path
 
     def run(self):
-        message = InstallApp.Install(path=self._path)
+        message = Install(data_InstallApp, path=self._path)
         
         self.finished.emit(message)
 

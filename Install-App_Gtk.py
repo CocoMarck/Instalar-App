@@ -8,9 +8,13 @@ import threading
 from logic.Modulo_Files import(
     Path
 )
-from data import Modulo_InstallApp as InstallApp
+from entities import InstallApp
+from data.Modulo_InstallApp import *
 from data.Modulo_Language import Language
 from interface import Modulo_Util_Gtk as Util_Gtk
+
+data_InstallApp = InstallApp
+read_InstallApp( data_InstallApp )
 
 
 lang = Language()
@@ -19,11 +23,11 @@ lang = Language()
 class Window_Install(Gtk.Window):
     def __init__(self):
         super().__init__(
-            title=f'{lang["install"]} - {InstallApp.Name()}'
+            title=f'{lang["install"]} - {data_InstallApp.name}'
         )
         self.set_resizable(True)
         self.set_default_size(512, 256)
-        self.set_icon_from_file(InstallApp.Icon())
+        self.set_icon_from_file( data_InstallApp.icon )
         
         # Contenedor principal - VBox
         vbox_main = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
@@ -44,9 +48,9 @@ class Window_Install(Gtk.Window):
 
         text_buffer = text_view.get_buffer()
         text_buffer.set_text(
-            f'{lang["ver"]} {InstallApp.Version()}\n\n'
+            f'{lang["ver"]} {data_InstallApp.version}\n\n'
 
-            f'{InstallApp.Comment()}\n\n'
+            f'{data_InstallApp.comment}\n\n'
         )
 
         text_scroll.add(text_view)
@@ -54,13 +58,13 @@ class Window_Install(Gtk.Window):
         vbox_main.pack_start(text_scroll, True, True, 0)
         
         # Texto de ayuda, por si no hay path
-        if InstallApp.Path() == '':
+        if data_InstallApp.path == '':
             text_dir = Path()
             # Seccion Vertical - Texto de Ayuda
             label = Gtk.Label( label=lang['set_dir'] )
             vbox_main.pack_start(label, True, False, 0)
         else:
-            text_dir = InstallApp.Path()
+            text_dir = data_InstallApp.path
         
         # Seccion Vertical - Directorio
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
@@ -89,7 +93,7 @@ class Window_Install(Gtk.Window):
     def evt_info_install(self, widget):
         dialog = Util_Gtk.Dialog_TextView(
             self,
-            text=InstallApp.Information()
+            text=Information( data_InstallApp )
         )
         dialog.run()
         dialog.destroy()
@@ -128,7 +132,8 @@ class Window_Install(Gtk.Window):
         self.dialog_wait.run()
     
     def thread_install(self):
-        self.message = InstallApp.Install(
+        self.message = Install(
+            data_InstallApp,
             path=self.entry_dir.get_text()
         )
         
