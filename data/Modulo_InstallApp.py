@@ -1,5 +1,6 @@
 from pathlib import Path as pathlib
 
+from entities import InstallApp
 from logic.Modulo_Text import (
     Ignore_Comment,
     Text_Read,
@@ -93,7 +94,7 @@ def Categories():
     return categories_list
 
 
-def Install(path=''):
+def Install(InstallApp, path=''):
     '''Instalar App a una ruta establecida'''
     try:
         # Crear Carpeta, si es que no existe
@@ -124,14 +125,14 @@ def Install(path=''):
                 
             # Crear acceso directo
             Execute_DirectAccess(
-                version=Version(),
-                path=path,
-                name=Name(),
-                execute=Exec(),
-                icon=Icon(),
-                comment=Comment(),
-                terminal=Terminal(),
-                categories=Categories()
+                version=InstallApp.version,
+                path=InstallApp.path,
+                name=InstallApp.name,
+                execute=InstallApp.exec,
+                icon=InstallApp.icon,
+                comment=InstallApp.comment,
+                terminal=InstallApp.terminal,
+                categories=InstallApp.categories
             )
             
             # Mensaje indicador de finalizacion
@@ -149,22 +150,36 @@ def Install(path=''):
     return message
 
 
-def Information():
+def Information( InstallApp ):
     '''Mostrar información de instalación'''
     return(
-        f'{lang["ver"]}: {Version()}\n\n'
+        f'{lang["ver"]}: { InstallApp.version }\n\n'
     
-        f'{lang["dir"]}: {Path()}\n\n'
+        f'{lang["dir"]}: { InstallApp.path }\n\n'
     
-        f'{lang["name"]}: {Name()}\n\n'
+        f'{lang["name"]}: { InstallApp.name }\n\n'
 
-        f'{lang["exec"]}: {Exec()}\n\n'
+        f'{lang["exec"]}: { InstallApp.exec }\n\n'
         
-        f'{lang["icon"]}: {Icon()}\n\n'
+        f'{lang["icon"]}: { InstallApp.icon }\n\n'
         
-        f'{lang["comment"]}: {Comment()}\n\n'
+        f'{lang["comment"]}: { InstallApp.comment }\n\n'
 
-        f'{lang["terminal"]}: {Terminal()}\n\n'
+        f'{lang["terminal"]}: { InstallApp.terminal }\n\n'
 
-        f'{lang["categories"]}: {Categories()}'
+        f'{lang["categories"]}: { InstallApp.categories }'
     )
+
+
+
+
+def read_InstallApp( InstallApp ):
+    '''Leer archivo y establecer parametros en la entidad InstallApp'''
+    InstallApp.version = Version()
+    InstallApp.path = Path()
+    InstallApp.name = Name()
+    InstallApp.exec = Exec()
+    InstallApp.icon = Icon()
+    InstallApp.comment = Comment()
+    InstallApp.terminal = Terminal()
+    InstallApp.categories = Categories()
