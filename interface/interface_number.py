@@ -11,7 +11,7 @@ from logic.display_number import *
 # Establecer dimenciones de windegts y ventana
 # Limite de resolucion: Anchura y altura de 480px como minimo.
 num_font = get_display_number(divisor=120)
-num_space_padding = int(num_font/3)
+num_space_padding = int(num_font/4)
 num_margin_xy = [num_font//4, num_font//8]
 
 nums_win_main = [

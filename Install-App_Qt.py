@@ -166,10 +166,16 @@ class Thread_Install(QThread):
 # Estilo de programa y bucle
 qss_style = ''
 for widget in get_list_text_widget( 'Qt' ):
-    qss_style += text_widget_style(
-        widget=widget, font=file_font, font_size=num_font, padding=num_space_padding,
-        margin_based_font=False, margin_xy=num_margin_xy, idented=4
-    )
+    if widget == 'QTextEdit':
+        qss_style += text_widget_style(
+            widget=widget, font=file_font, font_size=num_font, padding=None,
+            margin_based_font=False, margin_xy=num_margin_xy, idented=4
+        )
+    else:
+        qss_style += text_widget_style(
+            widget=widget, font=file_font, font_size=num_font, padding=num_space_padding,
+            margin_based_font=False, margin_xy=num_margin_xy, idented=4
+        )
 print(qss_style)
 
 
