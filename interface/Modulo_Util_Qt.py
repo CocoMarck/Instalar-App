@@ -1,13 +1,10 @@
+'''
+Dialogos con funciones especificas, hechos para funcionar en Qt.
+'''
 from os.path import isfile
-from logic.Modulo_System import(
-    Command_Run
-)
-from logic.Modulo_Text import(
-    Text_Read
-)
-from interface.Modulo_ShowPrint import(
-    Separator
-)
+from logic.Modulo_System import(Command_Run)
+from logic.Modulo_Text import(Text_Read)
+from interface.Modulo_ShowPrint import(Separator)
 from data.Modulo_Language import Language
 
 from PyQt6.QtWidgets import(
@@ -28,12 +25,13 @@ class Dialog_TextEdit(QDialog):
     def __init__(
         self, parent=None,
         text=f'{lang["text"]}...',
-        edit=False
+        edit=False,
+        size=[512, 256]
     ):
         super().__init__(parent)
         
         self.setWindowTitle( lang['text'] )
-        self.resize(512, 256)
+        self.resize( size[0], size[1] )
         
         # Verificar si el Text Edit es editable
         if edit == True:
@@ -94,12 +92,12 @@ class Dialog_TextEdit(QDialog):
         
 
 class Dialog_Command_Run(QDialog):
-    def __init__(self, parent=None, cmd='', cfg_file=''):
+    def __init__(self, parent=None, cmd='', cfg_file='', size=[512,256]):
         super().__init__(parent)
         
         self.setWindowTitle(f"{lang['cmd']} - {lang['exec']}")
-        self.setMinimumWidth(512)
-        self.setMinimumHeight(256)
+        self.setMinimumWidth( size[0] )
+        self.setMinimumHeight( size[1] )
         
         self.cmd = cmd
         self.cfg_file = cfg_file
@@ -113,7 +111,7 @@ class Dialog_Command_Run(QDialog):
         vbox_main.addWidget(label)
         
         # Seccion Vertical - Text Edit
-        text_edit = QTextEdit(str(cmd))
+        text_edit = QTextEdit( str(cmd).replace('\n', '<br>') )
         text_edit.setReadOnly(True)
         vbox_main.addWidget(text_edit)
         
@@ -139,11 +137,11 @@ class Dialog_Command_Run(QDialog):
 
 
 class Dialog_Wait(QDialog):
-    def __init__(self, parent=None, text=lang['help_wait']):
+    def __init__(self, parent=None, text=lang['help_wait'], size=[256, 128]):
         super().__init__(parent)
         
         self.setWindowTitle( lang['wait'] )
-        self.resize(256, 128)
+        self.resize( size[0], size[1] )
         
         # Contenedor Pincipal
         vbox_main = QVBoxLayout()

@@ -1,7 +1,7 @@
 import gi
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GLib
+from gi.repository import Gtk, GLib, Gdk
 
 import threading
 
@@ -11,7 +11,11 @@ from logic.Modulo_Files import(
 from entities import InstallApp
 from data.Modulo_InstallApp import *
 from data.Modulo_Language import Language
+from data.interface_data import *
+
 from interface import Modulo_Util_Gtk as Util_Gtk
+from interface.interface_number import *
+from interface.css_util import *
 
 data_InstallApp = InstallApp
 read_InstallApp( data_InstallApp )
@@ -26,7 +30,7 @@ class Window_Install(Gtk.Window):
             title=f'{lang["install"]} - {data_InstallApp.name}'
         )
         self.set_resizable(True)
-        self.set_default_size(512, 256)
+        self.set_default_size(nums_win_main[0], nums_win_main[1])
         self.set_icon_from_file( data_InstallApp.icon )
         
         # Contenedor principal - VBox
@@ -93,7 +97,7 @@ class Window_Install(Gtk.Window):
     def evt_info_install(self, widget):
         dialog = Util_Gtk.Dialog_TextView(
             self,
-            text=Information( data_InstallApp )
+            text=Information( data_InstallApp ), size=nums_win_text_edit
         )
         dialog.run()
         dialog.destroy()
@@ -122,7 +126,7 @@ class Window_Install(Gtk.Window):
         
     def evt_install_files(self, widget):
         self.dialog_wait = Util_Gtk.Dialog_Wait(
-            self, text=lang['wait']
+            self, text=lang['wait'], size=nums_win_wait
         )
 
         # Hilo - Subproceso para que no se conjele el loop de la app
@@ -152,6 +156,31 @@ class Window_Install(Gtk.Window):
         )
         dialog_message.run()
         dialog_message.destroy()
+
+
+
+
+# Bucle de programa y estilo de programa
+css_style = ''
+for widget in get_list_text_widget( 'Gtk' ):
+    if widget == 'textview':
+        css_style += text_widget_style(
+            widget=widget, font=file_font, font_size=num_font, padding=None,
+            margin_xy=None, idented=4
+        )
+    else:
+        css_style += text_widget_style(
+            widget=widget, font=file_font, font_size=num_font, padding=num_space_padding,
+            margin_xy=None, idented=4
+        )
+screen = Gdk.Screen.get_default()
+provider = Gtk.CssProvider()
+style_context = Gtk.StyleContext()
+style_context.add_provider_for_screen(
+    screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+)
+provider.load_from_data( str.encode(css_style) )
+print( css_style )
 
 
 win = Window_Install()

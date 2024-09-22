@@ -21,7 +21,11 @@ from logic.Modulo_Files import(
 from entities import InstallApp
 from data.Modulo_InstallApp import *
 from data import Modulo_Language as Lang
+from data.interface_data import *
+
 from interface import Modulo_Util_Qt as Util_Qt
+from interface.interface_number import *
+from interface.css_util import *
 
 data_InstallApp = InstallApp
 read_InstallApp( data_InstallApp )
@@ -36,7 +40,7 @@ class Window_Install(QWidget):
         
         self.setWindowTitle(f'{lang["install"]} - {data_InstallApp.name}')
         self.setWindowIcon(QIcon( data_InstallApp.icon ))
-        self.resize(512, 256)
+        self.resize(nums_win_main[0], nums_win_main[1])
         
         # Contenedor Principal
         vbox_main = QVBoxLayout()
@@ -103,7 +107,7 @@ class Window_Install(QWidget):
     def evt_info_install(self):
         Util_Qt.Dialog_TextEdit(
             self,
-            text = Information( data_InstallApp )
+            text = Information( data_InstallApp ), size=nums_win_text_edit
         ).exec()
         
     def evt_set_dir(self):
@@ -120,7 +124,7 @@ class Window_Install(QWidget):
     def evt_install_files(self):
         self.dialog_wait = Util_Qt.Dialog_Wait(
             self,
-            text=lang['help_wait']
+            text=lang['help_wait'], size=nums_win_wait
         )
         self.dialog_wait.show()
     
@@ -157,7 +161,20 @@ class Thread_Install(QThread):
         self.finished.emit(message)
 
 
+
+
+# Estilo de programa y bucle
+qss_style = ''
+for widget in get_list_text_widget( 'Qt' ):
+    qss_style += text_widget_style(
+        widget=widget, font=file_font, font_size=num_font, padding=num_space_padding,
+        margin_based_font=False, margin_xy=num_margin_xy, idented=4
+    )
+print(qss_style)
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.setStyleSheet(qss_style)
     window = Window_Install()
     sys.exit(app.exec())
