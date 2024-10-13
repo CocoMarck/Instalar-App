@@ -1,0 +1,9 @@
+Win
+pyinstaller --contents-directory "Install-App_internal" --windowed --uac-admin ./Install-App_Qt.py &
+pyinstaller --contents-directory "Install-App_internal" --console --uac-admin ./Install-App_Shell.py
+
+
+
+Linux:
+pyinstaller --contents-directory "Install-App_internal"  ./Install-App_Qt.py &
+pyinstaller --contents-directory "Install-App_internal" --console ./Install-App_Shell.py
